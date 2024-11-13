@@ -1,0 +1,100 @@
+package KI304.Pelekh.Lab4;  // Вказуємо пакет, в якому знаходиться клас. Це допомагає організувати код у великих проєктах.
+
+import java.util.Scanner;  // Імпортуємо клас для читання введених даних з клавіатури.
+import java.io.*;  // Імпортуємо класи для роботи з файлами.
+import static java.lang.System.out;  // Статичний імпорт, щоб можна було використовувати out.print замість System.out.print.
+
+/**
+ * Class <code>EquationsApp</code> implements driver for Equations class
+ * @author Ваше Прізвище
+ * @version 1.0
+ */
+public class Lab4 {
+    /**
+     * Main method to execute the program
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+        try {
+            out.print("Enter file name: ");  // Просимо користувача ввести ім'я файлу для запису результату.
+            Scanner in = new Scanner(System.in);  // Створюємо об'єкт Scanner для читання даних з консолі.
+            String fName = in.nextLine();  // Зчитуємо введене ім'я файлу з клавіатури.
+            PrintWriter fout = new PrintWriter(new File(fName));  // Створюємо об'єкт для запису результату у файл.
+            try {
+                try {
+                    Equations eq = new Equations();  // Створюємо об'єкт класу Equations для обчислення виразу.
+                    out.print("Enter X: ");  // Просимо користувача ввести значення X.
+                    double x = in.nextDouble();  // Зчитуємо значення X, введене користувачем.
+                    fout.print(eq.calculate(x));  // Викликаємо метод для обчислення виразу і записуємо результат у файл.
+                } finally {
+                    // Цей блок виконається завжди, незалежно від того, виникли помилки чи ні.
+                    fout.flush();  // Очищаємо буфер і записуємо всі дані у файл.
+                    fout.close();  // Закриваємо файл, звільняючи ресурси.
+                }
+            } catch (CalcException ex) {
+                // Якщо виникла помилка під час обчислення виразу, вона обробляється тут.
+                out.print(ex.getMessage());  // Виводимо повідомлення про помилку в консоль.
+            }
+        } catch (FileNotFoundException ex) {
+            // Якщо файл не було знайдено або не вдалося його створити, обробляється цей виняток.
+            out.print("Exception reason: Perhaps wrong file path");  // Повідомлення про можливу помилку з файлом.
+        }
+    }
+}
+
+/**
+ * Class <code>CalcException</code> extends ArithmeticException for detailed error reporting
+ * @author Ваше Прізвище
+ * @version 1.0
+ */
+class CalcException extends ArithmeticException {
+    public CalcException() {}  // Конструктор за замовчуванням, не приймає аргументів.
+
+    public CalcException(String cause) {  // Конструктор з параметром для передачі повідомлення про помилку.
+        super(cause);  // Викликаємо конструктор батьківського класу (ArithmeticException), передаючи повідомлення.
+    }
+}
+
+/**
+ * Class <code>Equations</code> implements method for y = cot(x)/(sin(2x) + 4cos(x))
+ * expression calculation
+ * @author Ваше Прізвище
+ * @version 1.0
+ */
+class Equations {
+    /**
+     * Method calculates the y = cot(x)/(sin(2x) + 4cos(x)) expression
+     * @param <code>x</code> Value in radians
+     * @throws CalcException if the calculation fails
+     */
+    public double calculate(double x) throws CalcException {
+        double y, numerator, denominator;  // Оголошуємо змінні для чисельника, знаменника та результату.
+
+        try {
+            // Обчислюємо чисельник: cot(x) = 1/tan(x)
+            numerator = 1.0 / Math.tan(x);  // Використовуємо Math.tan() для обчислення тангенса і беремо обернене значення.
+
+            // Обчислюємо знаменник: sin(2x) + 4*cos(x)
+            denominator = Math.sin(2 * x) + 4 * Math.cos(x);  // Обчислюємо синус 2x та 4 помножити на косинус x.
+
+            // Перевіряємо, чи не дорівнює знаменник нулю.
+            if (denominator == 0) {
+                throw new ArithmeticException();  // Генеруємо виключення, якщо знаменник дорівнює нулю.
+            }
+
+            // Обчислюємо результат: y = numerator / denominator
+            y = numerator / denominator;
+
+            // Перевіряємо, чи результат не є NaN або нескінченністю.
+            if (Double.isNaN(y) || Double.isInfinite(y)) {
+                throw new ArithmeticException();  // Генеруємо виняток, якщо результат некоректний (NaN або нескінченність).
+            }
+
+        } catch (ArithmeticException ex) {
+            // Створюємо виняток CalcException з поясненням причини помилки.
+            throw new CalcException("Exception reason: Invalid value of X for calculation.");
+        }
+
+        return y;  // Повертаємо результат обчислення.
+    }
+}
