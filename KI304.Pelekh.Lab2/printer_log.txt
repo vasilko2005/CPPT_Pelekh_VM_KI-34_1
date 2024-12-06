@@ -1,0 +1,16 @@
+Printer initialized: HP LaserJet
+Attempting to print 18 sheets.
+Printed 19 sheets successfully.
+Added 20 sheets of paper.
+Attempting to print 5 sheets.
+Printed 5 sheets successfully.
+Refilled ink.
+Shutting down printer: HP LaserJet
+Printer initialized: HP LaserJet
+Attempting to print 10 sheets.
+Printed 10 sheets successfully.
+Added 20 sheets of paper.
+Attempting to print 5 sheets.
+Printed 5 sheets successfully.
+Refilled ink.
+Shutting down printer: HP LaserJet
